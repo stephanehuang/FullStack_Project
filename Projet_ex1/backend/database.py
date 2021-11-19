@@ -22,10 +22,11 @@ async def fetch_all_todos():
     return todos
 
 
-async def create_todo(todo, user):
+async def create_todo(todo, username):
     document = todo
     _id = await todolist.insert_one(document)
-    user["todolist"].append(_id)
+    user = await users.find_one({"Name": username})
+    user["todolist"].append(ObjectId(_id.inserted_id))
     await users.update_one({"Name": user["Name"]}, {"$set": {"todolist": user["todolist"]}})
     return document
 
@@ -37,7 +38,6 @@ async def get_user(username: str):
 
 async def create_user(user):
     document = user
-    document["todolist"] = []
     result = await users.insert_one(document)
     return document
 

@@ -11,7 +11,7 @@ from database import *
 
 from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
-
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 origins = [
     "http://localhost:3000",
 ]
@@ -37,16 +37,15 @@ async def read_root():
 async def add_user(newuser: NewUser):
     document = newuser.dict()
     document["hashed_password"] = get_password_hash(document["password"])
-    del document["password"]
     response = await create_user(document)
     if response:
         return response
     raise HTTPException(400, "Something went wrong")
 
 
-@app.post("/api/token", response_model=Token)
+@app.post("/token", response_model=Token)
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = authenticate_user(form_data.username, form_data.password)
+    user = await authenticate_user(form_data.username, form_data.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -54,8 +53,8 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
+    access_token = await create_access_token(
+        data={"sub": user.Name}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
@@ -76,7 +75,7 @@ async def get_todo_by_title(title):
 
 @app.post("/api/todo/", response_model=Todo)
 async def post_todo(todo: Todo, current_user: User = Depends(get_current_user)):
-    response = await create_todo(todo.dict(), current_user.dict())
+    response = await create_todo(todo.dict(), current_user.Name)
     if response:
         return response
     raise HTTPException(400, "Something went wrong")
