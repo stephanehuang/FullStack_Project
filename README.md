@@ -1,2 +1,2 @@
 # FullStack_Project
-Un petit projet du cour DSIA-5102A: FullStack data apllication, une web application todo-list.
+Une application pour administrer le TODO list ( BDD pour les utilisateurs et todo objets ; interface de login et interface principal pour voir et modifier la liste)
