@@ -1,9 +1,7 @@
-#  @bekbrace
-#  FARMSTACK Tutorial - Sunday 13.06.2021
-
 import motor.motor_asyncio
 from model import *
 from login import *
+from bson.objectid import ObjectId
 
 client = motor.motor_asyncio.AsyncIOMotorClient('mongodb://localhost:27017/')
 database = client.TodoList
@@ -24,9 +22,11 @@ async def fetch_all_todos():
     return todos
 
 
-async def create_todo(todo, userid):
+async def create_todo(todo, user):
     document = todo
-    result1 = await todolist.insert_one(document)
+    _id = await todolist.insert_one(document)
+    user["todolist"].append(_id)
+    await users.update_one({"Name": user["Name"]}, {"$set": {"todolist": user["todolist"]}})
     return document
 
 
@@ -37,6 +37,7 @@ async def get_user(username: str):
 
 async def create_user(user):
     document = user
+    document["todolist"] = []
     result = await users.insert_one(document)
     return document
 
