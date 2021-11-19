@@ -1,12 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
+import Login from './Login'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import reportWebVitals from './reportWebVitals';
 
+
+const DATA = [
+    {id: "todo-0", name: "Eat", completed: true},
+    {id: "todo-1", name: "Sleep", completed: false},
+    {id: "todo-2", name: "Repeat", completed: false},
+];
+
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Login tasks={DATA}/>
   </React.StrictMode>,
   document.getElementById('root')
 );
