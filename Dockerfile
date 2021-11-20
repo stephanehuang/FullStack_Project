@@ -1,3 +1,5 @@
 FROM mongo:latest
 
-COPY ./Data /app/data
+WORKDIR /app/data
+
+COPY ./Data .
