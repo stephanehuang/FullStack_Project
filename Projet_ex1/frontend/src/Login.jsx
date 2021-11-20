@@ -7,7 +7,7 @@ function Login() {
     const [Name, setName] = useState('')
     const [password, setpassword] = useState('')
     const addUsrHandler = () => {
-    axios.post('http://localhost:8000/api/login', {'Name': Name, 'password': password})
+    axios.post('http://localhost:8000/token', {'Name': Name, 'password': password})
         .then(res => console.log(res))
 };
 
