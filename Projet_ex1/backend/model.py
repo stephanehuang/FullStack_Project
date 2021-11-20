@@ -9,6 +9,7 @@ from typing import Optional
 class Todo(BaseModel):
     title: str
     description: str
+    user: str
 
 
 class User(BaseModel):
@@ -30,4 +31,3 @@ class NewUser(User):
 
 class UserInDB(User):
     hashed_password: str
-    todolist: list

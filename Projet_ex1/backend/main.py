@@ -60,8 +60,8 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 
 
 @app.get("/api/todo")
-async def get_todo():
-    response = await fetch_all_todos()
+async def get_todo(current_user: User = Depends(get_current_user)):
+    response = await fetch_all_todos(current_user.Name)
     return response
 
 
